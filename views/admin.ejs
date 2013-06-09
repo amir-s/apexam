@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>AP Exam</title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+	<script src='/js/jquery.js'></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script>
+		$(function () {
+			var socket = io.connect('');
+			socket.on('j', function (data) {
+				$('#messages').append('<p> IP Joined ' + data.address + ":" + data.port +'</p>');
+			});
+			
+			socket.on('join', function (data) {
+				var id = data.address.address + '_' + data.address.port;
+				id = id.split('.').join('_');
+				console.log(id);
+				$('#ips').append('<li id=' + id + '>' + data.address.address +':'+data.address.port+' [' + data.username + '] </li>');
+			});
+			
+			socket.on('dc', function (data) {
+				var id = data.address.address + '_' + data.address.port;
+				id = id.split('.').join('_');
+				$('#' + id ).remove();
+				$('#messages').append('<p>'+ data.address.address +':'+data.address.port+' [' + data.username + '] LEFT THE NETWORK</p>');
+			});
+			
+		});
+	</script>
+	
+	
+  </head>
+  <body>
+    <h1>AP Exam</h1>
+	<ul id='ips'></ul>
+	<hr />
+	<p id='messages'></p>
+  </body>
+</html>
